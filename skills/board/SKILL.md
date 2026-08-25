@@ -7,7 +7,7 @@ description: Project board ("Mission Control") for the current repo. Use when th
 
 ## The board
 
-Every repo has at most one board: the directory `<repo root>/.claude/board/` holding `board.json` (source of truth) + `BOARD.md` (markdown mirror) + `board.html` (web view, published as an Artifact). Outside a git repo, use `<cwd>/.claude/board/`. That directory is the only thing any command reads or writes — nothing is shared across repos.
+Every repo has at most one board: the directory `<repo root>/.claude/board/` holding `board.json` (source of truth) + `BOARD.md` (markdown mirror) + `board.html` (web view, published as an Artifact — a derived file, regenerated from the plugin template on every refresh; never hand-edited). Outside a git repo, use `<cwd>/.claude/board/`. That directory is the only thing any command reads or writes — nothing is shared across repos.
 
 If the directory doesn't exist → **First run**.
 
@@ -21,8 +21,7 @@ Do this in one exchange, not a questionnaire:
 
 **3. Create the board from the plugin's templates.** Templates live at `<plugin root>/templates/`; the plugin root is two levels above this skill's base directory (the path in the invocation header) — **resolve symlinks first** (`realpath`), since during development the skill is symlinked in from the repo.
 - `board.json` ← `templates/board.json`, with `config.name` = "<Repo> Mission Control", `favicon` 🚀, `artifactUrl` null until first published.
-- `board.html` ← `templates/board.html` verbatim; set `<title>` to `config.name`. The data blob is filled in by the refresh step below.
-- Write the approved cards, then run the **refresh** steps at the end of this file (the first publish returns the artifact URL — store it in config and show it).
+- Write the approved cards, then run the **refresh** steps at the end of this file — they produce `BOARD.md` and `board.html` (the first publish returns the artifact URL — store it in config and show it).
 
 ## board.json schema
 
@@ -94,7 +93,7 @@ Project references are fuzzy-matched (ask if ambiguous).
 
    _nothing here_                                 ← for an empty section
    ```
-3. Update `board.html`: replace **only** the `const BOARD = {...}` blob between `// BOARD-DATA-START` and `// BOARD-DATA-END` (set `updated`; `board` = a short tag for the header, e.g. the repo name; strip per-project `created`/`updated` — the renderer ignores extras). Never touch markup/CSS/renderer.
+3. **Regenerate `board.html` from the plugin template** — never patch the existing copy. Read `<plugin root>/templates/board.html` (path rule in First run step 3), set its `<title>` to `config.name`, and replace the `const BOARD = {...}` blob between `// BOARD-DATA-START` and `// BOARD-DATA-END` with this board's data (`updated`; `board` = a short tag for the header, e.g. the repo name; `projects` minus per-project `created`/`updated` — the renderer ignores extras). Write the result over the board's `board.html`. Because the file is rebuilt from the template every time, plugin design updates reach every board on its next refresh, and any hand edits to a board's `board.html` are lost by design.
 4. Republish via the Artifact tool: `file_path` = `board.html`, favicon from config, and **always `url` = `config.artifactUrl` when it is set** — publishing without `url` mints a second artifact (the tool keys on file path, so a moved board silently duplicates). Only when `artifactUrl` is null: publish fresh and store the returned URL in config. If the returned URL ever differs from `config.artifactUrl`, that's a duplicate: say so, keep publishing to the stored URL, never to the new one. If publishing fails or the Artifact tool isn't available, still report the data change as done and mention the web board didn't update.
 5. Confirm in chat with a one-line summary + the board's URL.
 

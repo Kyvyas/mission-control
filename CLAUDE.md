@@ -22,9 +22,11 @@ skills/board/
                      is a symlink into this directory, so edits here change the
                      author's working /board immediately (next skill invocation).
 templates/
-  board.html         The web-board template (console design). Data is embedded as a
-                     `const BOARD = {...}` blob between `// BOARD-DATA-START` and
-                     `// BOARD-DATA-END` markers; updates swap ONLY the blob.
+  board.html         The web-board template (console design). Every board's
+                     board.html is REGENERATED from this file on each refresh
+                     (title + `const BOARD = {...}` blob between the
+                     `// BOARD-DATA-START` / `// BOARD-DATA-END` markers swapped in),
+                     so design edits here reach all boards on their next change.
   board.json         Starter data file (schema `version: 1`, empty projects). New
                      boards are bootstrapped from these two files — the skill finds
                      them at `<realpath of skill dir>/../../templates/`.
@@ -32,7 +34,7 @@ templates/
 
 ## Architecture (settled decisions — don't relitigate casually)
 
-- **A board** = `<repo root>/.claude/board/` (cwd if not in a git repo) holding `board.json` (source of truth) + `BOARD.md` (markdown mirror, IDE-pinnable) + `board.html` (web view published as a Claude Artifact at a stable per-board URL held in `config.artifactUrl`).
+- **A board** = `<repo root>/.claude/board/` (cwd if not in a git repo) holding `board.json` (source of truth) + `BOARD.md` (markdown mirror, IDE-pinnable) + `board.html` (web view published as a Claude Artifact at a stable per-board URL held in `config.artifactUrl`; a derived file — rebuilt from `templates/board.html` on every refresh, never hand-edited).
 - **One board per repo, nothing else.** No global board, no registry, no cross-repo aggregation — there used to be all three (2026-08-25, day one) and they were dropped for being more muddle than value. Don't reintroduce them; a user who wants planning outside a repo can make a plain directory a board.
 - **First run** in an unboarded repo: explain boards + the artifact in a few sentences, mention commit-vs-gitignore (don't ask), seed proposed cards from the repo's docs (README, CLAUDE.md, ROADMAP/PLAN/TODO, docs/) for approval, then bootstrap from `templates/`. Never copy another board's files.
 - **Statuses**: `idea | active | parked | shipped | dropped`, displayed in column order Ideas · Active · Shipped · Parked (Dropped only when non-empty). Parking requires `parked_reason` + `unblock`. Holds > 21 days trigger the "longest hold" nag.
@@ -49,7 +51,7 @@ The release checklist lives on this repo's board (`.claude/board/`, "Publish Mis
 
 1. ~~**Template-asset bootstrap**~~ — done 2026-08-25: new boards come from `templates/board.{html,json}`.
 2. ~~**Schema versioning**~~ — done 2026-08-25: `"version": 1` in the starter; files without it are treated as v1 and stamped on next write.
-3. **Re-render from template**: today each board owns a drifting *copy* of board.html; design improvements in plugin updates won't propagate. Switch to re-rendering from the plugin template on each publish.
+3. ~~**Re-render from template**~~ — done 2026-08-25: the refresh step rebuilds board.html from the template every time; per-board copies can no longer drift.
 4. **Optional artifact**: some users lack artifact publishing or don't want a web page. Chat + BOARD.md must work standalone; a per-board config flag governs publishing.
 5. **Namespacing decision**: installed plugin skills are `/plugin-name:skill-name` → currently `/mission-control:board`. Decide before release (rename plugin or skill if that's too long).
 6. **Self-migration test**: the author must uninstall the personal symlinked skill, install the built plugin, and confirm this repo's board still works.
