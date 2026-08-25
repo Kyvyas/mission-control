@@ -74,7 +74,26 @@ Project references are fuzzy-matched (ask if ambiguous).
 ## After ANY data change — refresh the three displays
 
 1. Write the change to `board.json`.
-2. Regenerate `BOARD.md` (header tally + longest-hold callout + the section order above).
+2. Regenerate `BOARD.md` in exactly this shape (same on every board, so it's diffable and pinnable):
+
+   ```markdown
+   # <config.name> — project board
+
+   _Updated 2026-08-25 · 2 ideas · 1 active · 1 shipped · 3 parked_        ← only non-zero counts; "empty" if none
+
+   > 🟡 **Longest hold:** <title> — since 2026-08-13. Clearance to resume: <unblock>   ← only if something is parked
+
+   ## 🔵 Ideas                                    ← then 🟢 Active · 🚀 Shipped · 🟡 Parked · ⚫ Dropped (Dropped only if non-empty)
+
+   ### <title> `<area>`                           ← idea/active. Shipped: "### <title> — shipped <date>". Parked: "### <title> — parked since <date>"
+   **Next:** <next_action>                        ← parked cards instead get "**Why:** <parked_reason>" + "**To resume:** <unblock>"
+   **Checklist (1/3):**                           ← only if tasks exist
+   - [x] <task> (2026-08-25)
+   - [ ] <task>
+   - <note>                                       ← one bullet per note, after the checklist
+
+   _nothing here_                                 ← for an empty section
+   ```
 3. Update `board.html`: replace **only** the `const BOARD = {...}` blob between `// BOARD-DATA-START` and `// BOARD-DATA-END` (set `updated`; `board` = a short tag for the header, e.g. the repo name; strip per-project `created`/`updated` — the renderer ignores extras). Never touch markup/CSS/renderer.
 4. Republish via the Artifact tool: `file_path` = `board.html`, favicon from config, and **always `url` = `config.artifactUrl` when it is set** — publishing without `url` mints a second artifact (the tool keys on file path, so a moved board silently duplicates). Only when `artifactUrl` is null: publish fresh and store the returned URL in config. If the returned URL ever differs from `config.artifactUrl`, that's a duplicate: say so, keep publishing to the stored URL, never to the new one. If publishing fails or the Artifact tool isn't available, still report the data change as done and mention the web board didn't update.
 5. Confirm in chat with a one-line summary + the board's URL.
