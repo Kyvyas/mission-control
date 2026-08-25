@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "config": {
+    "name": "Mission Control",
+    "favicon": "🚀",
+    "artifactUrl": null,
+    "htmlPath": "board.html",
+    "markdownPath": "BOARD.md"
+  },
+  "projects": []
+}

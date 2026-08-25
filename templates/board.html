@@ -18,6 +18,7 @@
     --dropped: #77808F;   --dropped-soft: #232936;
     --chip-hot-bg: #E0A73F;
     --chip-hot-fg: #0E1420;
+    --toggle: #3ECFC4;
   }
   @media (prefers-color-scheme: light) {
     :root:not([data-theme="dark"]) {
@@ -35,6 +36,7 @@
       --dropped: #7A8090;   --dropped-soft: #EAECEF;
       --chip-hot-bg: #A2731B;
       --chip-hot-fg: #FBFCFE;
+      --toggle: #178F86;
     }
   }
   :root[data-theme="light"] {
@@ -52,6 +54,7 @@
     --dropped: #7A8090;   --dropped-soft: #EAECEF;
     --chip-hot-bg: #A2731B;
     --chip-hot-fg: #FBFCFE;
+    --toggle: #178F86;
   }
 
   * { box-sizing: border-box; }
@@ -195,13 +198,31 @@
   .s-idea .next b    { color: var(--idea); }
   .s-active .next b  { color: var(--active); }
   .s-parked .next b  { color: var(--parked); }
+  .check { margin-top: 10px; }
+  .check + .check { margin-top: 4px; }
   .check-head {
-    margin-top: 10px;
     font-family: "IBM Plex Mono", ui-monospace, monospace;
-    font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--mute); font-variant-numeric: tabular-nums;
+    font-size: 12.5px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink); font-variant-numeric: tabular-nums;
+    cursor: pointer; user-select: none; list-style: none;
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 8px; border: 1px solid var(--line); border-radius: 2px;
+    background: var(--ground);
   }
-  .tasks { margin: 5px 0 0; padding: 0; list-style: none; font-size: 12.5px; }
+  .check-head::-webkit-details-marker { display: none; }
+  .check-head::before {
+    content: "▶"; font-size: 10px; color: var(--toggle);
+    transition: transform 0.15s; flex-shrink: 0;
+  }
+  .check[open] .check-head::before { transform: rotate(90deg); }
+  .check-head::after {
+    content: "show"; margin-left: auto;
+    font-size: 10.5px; font-weight: 400; letter-spacing: 0.08em; color: var(--mute);
+  }
+  .check[open] .check-head::after { content: "hide"; }
+  .check-head:hover { border-color: var(--toggle); }
+  .check[open] .check-head { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+  .tasks { margin: 0; padding: 6px 8px 4px; list-style: none; font-size: 12.5px; border: 1px solid var(--line); border-top: 0; }
   .task { display: flex; gap: 7px; margin-top: 3px; align-items: baseline; }
   .task .box {
     font-family: "IBM Plex Mono", ui-monospace, monospace;
@@ -209,7 +230,7 @@
   }
   .task.done .box { color: var(--active); }
   .task.done .task-text { text-decoration: line-through; color: var(--mute); }
-  .notes { margin: 8px 0 0; padding-left: 16px; color: var(--mute); font-size: 12.5px; }
+  .notes { margin: 0; padding: 6px 8px 6px 24px; color: var(--mute); font-size: 12.5px; border: 1px solid var(--line); border-top: 0; }
   .notes li { margin-top: 3px; }
   .meta {
     margin-top: 8px;
@@ -332,14 +353,15 @@ function card(p) {
 
   if (p.tasks && p.tasks.length) {
     const done = p.tasks.filter(t => t.done).length;
-    inner += `<div class="check-head">Checklist ${done}/${p.tasks.length}</div>` +
+    inner += `<details class="check"><summary class="check-head">Checklist ${done}/${p.tasks.length}</summary>` +
       `<ul class="tasks">` + p.tasks.map(t =>
         `<li class="task${t.done ? " done" : ""}"><span class="box">${t.done ? "▣" : "▢"}</span>` +
-        `<span class="task-text">${esc(t.text)}</span></li>`).join("") + `</ul>`;
+        `<span class="task-text">${esc(t.text)}</span></li>`).join("") + `</ul></details>`;
   }
 
   if (p.notes && p.notes.length)
-    inner += `<ul class="notes">${p.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul>`;
+    inner += `<details class="check"><summary class="check-head">Notes ×${p.notes.length}</summary>` +
+      `<ul class="notes">${p.notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul></details>`;
   if (p.status === "shipped" && p.shipped_on)
     inner += `<div class="meta">Mission complete · ${esc(p.shipped_on)}</div>`;
 
