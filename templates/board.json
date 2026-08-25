@@ -3,6 +3,7 @@
   "config": {
     "name": "Mission Control",
     "favicon": "🚀",
+    "web": true,
     "artifactUrl": null,
     "htmlPath": "board.html",
     "markdownPath": "BOARD.md"

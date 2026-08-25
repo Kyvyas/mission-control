@@ -7,7 +7,7 @@ description: Project board ("Mission Control") for the current repo. Use when th
 
 ## The board
 
-Every repo has at most one board: the directory `<repo root>/.claude/board/` holding `board.json` (source of truth) + `BOARD.md` (markdown mirror) + `board.html` (web view, published as an Artifact — a derived file, regenerated from the plugin template on every refresh; never hand-edited). Outside a git repo, use `<cwd>/.claude/board/`. That directory is the only thing any command reads or writes — nothing is shared across repos.
+Every repo has at most one board: the directory `<repo root>/.claude/board/` holding `board.json` (source of truth) + `BOARD.md` (markdown mirror) + `board.html` (web view — a derived file, regenerated from the plugin template on every refresh, never hand-edited; published as an Artifact only when `config.web` is true). Outside a git repo, use `<cwd>/.claude/board/`. That directory is the only thing any command reads or writes — nothing is shared across repos.
 
 If the directory doesn't exist → **First run**.
 
@@ -15,19 +15,19 @@ If the directory doesn't exist → **First run**.
 
 Do this in one exchange, not a questionnaire:
 
-**1. Explain, briefly.** Three or four plain sentences, in your own words: a board is a set of project cards in *Ideas · Active · Shipped · Parked*; each active card carries one next action and an optional checklist; parking a card always records *why it stopped* and *what resumes it*, so nothing dies quietly in a backlog. Then the displays: the data lives in `.claude/board/board.json` in this repo (commit it to share with the team, or add `.claude/board/` to `.gitignore` to keep it private — mention this, don't ask), mirrored to a `BOARD.md` they can pin in their editor, plus a **web board** — a console-style page published as a Claude Artifact, private to them by default at one stable URL that updates after every change, shareable with teammates if they choose.
+**1. Explain, briefly.** Three or four plain sentences, in your own words: a board is a set of project cards in *Ideas · Active · Shipped · Parked*; each active card carries one next action and an optional checklist; parking a card always records *why it stopped* and *what resumes it*, so nothing dies quietly in a backlog. Then the displays: the data lives in `.claude/board/board.json` in this repo (commit it to share with the team, or add `.claude/board/` to `.gitignore` to keep it private — mention this, don't ask), mirrored to a `BOARD.md` they can pin in their editor, plus an optional **web board** — a console-style page published as a Claude Artifact, private to them by default at one stable URL that updates after every change, shareable with teammates if they choose. It's on by default; say "no web board" to skip it (the same page still works locally: `open .claude/board/board.html`). If the Artifact tool isn't available in this session, don't offer it — set `config.web` false silently and mention the local file instead.
 
 **2. Seed from the repo's docs.** Look for planning material: `README.md`, `CLAUDE.md`, `ROADMAP*`, `PLAN*`, `TODO*`, `CHANGELOG*`, `docs/**/*.md` (skip `node_modules`, build output, vendored code). Pull out anything that reads as a project or a plan: roadmap items, "next steps", known gaps, planned features, checklists, follow-ups. Draft cards from them — title, area, a status guess (`idea` unless the doc says it's in progress), `next_action`, `tasks` from checklist-style items, and a `notes` entry naming the source file — and **show the draft for approval before writing anything**; the user can trim, merge, or reject. If the docs hold nothing plan-like, say so in one line and create the board empty: "Nothing to seed from — add your first card with `/board add <project>`."
 
 **3. Create the board from the plugin's templates.** Templates live at `<plugin root>/templates/`; the plugin root is two levels above this skill's base directory (the path in the invocation header) — **resolve symlinks first** (`realpath`), since during development the skill is symlinked in from the repo.
-- `board.json` ← `templates/board.json`, with `config.name` = "<Repo> Mission Control", `favicon` 🚀, `artifactUrl` null until first published.
+- `board.json` ← `templates/board.json`, with `config.name` = "<Repo> Mission Control", `favicon` 🚀, `web` true unless declined/unavailable, `artifactUrl` null until first published.
 - Write the approved cards, then run the **refresh** steps at the end of this file — they produce `BOARD.md` and `board.html` (the first publish returns the artifact URL — store it in config and show it).
 
 ## board.json schema
 
 Top level: `version` (currently `1`; a file with no `version` is treated as 1 and gets the field added on its next write), `config`, `projects[]`.
 
-`config`: `name`, `favicon` (🚀), `artifactUrl` (stable Artifact URL or null), `htmlPath`/`markdownPath` (relative to the board dir).
+`config`: `name`, `favicon` (🚀), `web` (publish the web board? default true; a file without it is treated as true), `artifactUrl` (stable Artifact URL or null), `htmlPath`/`markdownPath` (relative to the board dir).
 
 Per project:
 
@@ -62,6 +62,7 @@ Project references are fuzzy-matched (ask if ambiguous).
 - **task <project> <text>** — append open task(s) to `tasks` (create the array if absent). To draft a checklist from the repo's plan docs (e.g. `docs/<x>-plan.md`), read them and propose tasks for approval before saving.
 - **tick <project> <task>** / **untick** — fuzzy-match the task; set `done` + `done_on` = today (or clear both). Completing the whole checklist: say so and ask whether to ship — never auto-ship.
 - **what next / what's stale** — recommend from the board: active items' next actions first, then oldest-parked with its unblock.
+- **web board on / off** — set `config.web`. Turning on publishes fresh (or to the stored `artifactUrl` if one exists) and shows the URL. Turning off stops publishing; keep `artifactUrl` (the page keeps serving its last version — artifacts can't be deleted from here, say so) and mention the local file.
 - **seed** / **import from docs** — re-run First run step 2 on an existing board (propose, then write only what's approved; never duplicate cards that already exist).
 
 ## Invariants
@@ -94,7 +95,7 @@ Project references are fuzzy-matched (ask if ambiguous).
    _nothing here_                                 ← for an empty section
    ```
 3. **Regenerate `board.html` from the plugin template** — never patch the existing copy. Read `<plugin root>/templates/board.html` (path rule in First run step 3), set its `<title>` to `config.name`, and replace the `const BOARD = {...}` blob between `// BOARD-DATA-START` and `// BOARD-DATA-END` with this board's data (`updated`; `board` = a short tag for the header, e.g. the repo name; `projects` minus per-project `created`/`updated` — the renderer ignores extras). Write the result over the board's `board.html`. Because the file is rebuilt from the template every time, plugin design updates reach every board on its next refresh, and any hand edits to a board's `board.html` are lost by design.
-4. Republish via the Artifact tool: `file_path` = `board.html`, favicon from config, and **always `url` = `config.artifactUrl` when it is set** — publishing without `url` mints a second artifact (the tool keys on file path, so a moved board silently duplicates). Only when `artifactUrl` is null: publish fresh and store the returned URL in config. If the returned URL ever differs from `config.artifactUrl`, that's a duplicate: say so, keep publishing to the stored URL, never to the new one. If publishing fails or the Artifact tool isn't available, still report the data change as done and mention the web board didn't update.
-5. Confirm in chat with a one-line summary + the board's URL.
+4. **Only if `config.web` is true** (skip silently otherwise — no nag): republish via the Artifact tool: `file_path` = `board.html`, favicon from config, and **always `url` = `config.artifactUrl` when it is set** — publishing without `url` mints a second artifact (the tool keys on file path, so a moved board silently duplicates). Only when `artifactUrl` is null: publish fresh and store the returned URL in config. If the returned URL ever differs from `config.artifactUrl`, that's a duplicate: say so, keep publishing to the stored URL, never to the new one. If publishing fails or the Artifact tool isn't available, still report the data change as done and mention the web board didn't update.
+5. Confirm in chat with a one-line summary + the board's URL (or no URL when the web board is off).
 
 Read-only invocations (plain `/board`, "what next") don't republish.

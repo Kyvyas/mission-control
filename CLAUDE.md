@@ -39,7 +39,7 @@ templates/
 - **First run** in an unboarded repo: explain boards + the artifact in a few sentences, mention commit-vs-gitignore (don't ask), seed proposed cards from the repo's docs (README, CLAUDE.md, ROADMAP/PLAN/TODO, docs/) for approval, then bootstrap from `templates/`. Never copy another board's files.
 - **Statuses**: `idea | active | parked | shipped | dropped`, displayed in column order Ideas · Active · Shipped · Parked (Dropped only when non-empty). Parking requires `parked_reason` + `unblock`. Holds > 21 days trigger the "longest hold" nag.
 - **`next_action` vs `tasks`**: `next_action` is the single headline step; `tasks` is an optional checklist beneath it. Never auto-ship on checklist completion — announce and ask.
-- **Three synced displays** per board, refreshed after every data change; chat + BOARD.md are the core, the artifact is an enhancement (see roadmap: it must become optional).
+- **Three synced displays** per board, refreshed after every data change; chat + BOARD.md are the core, the artifact is an enhancement gated by `config.web` (default true; auto-false when the Artifact tool is unavailable). board.html is always generated so the console view works from disk.
 
 ## Design system (templates/board.html)
 
@@ -52,7 +52,7 @@ The release checklist lives on this repo's board (`.claude/board/`, "Publish Mis
 1. ~~**Template-asset bootstrap**~~ — done 2026-08-25: new boards come from `templates/board.{html,json}`.
 2. ~~**Schema versioning**~~ — done 2026-08-25: `"version": 1` in the starter; files without it are treated as v1 and stamped on next write.
 3. ~~**Re-render from template**~~ — done 2026-08-25: the refresh step rebuilds board.html from the template every time; per-board copies can no longer drift.
-4. **Optional artifact**: some users lack artifact publishing or don't want a web page. Chat + BOARD.md must work standalone; a per-board config flag governs publishing.
+4. ~~**Optional artifact**~~ — done 2026-08-25: `config.web` (default true) governs publishing; board.html is still generated locally either way.
 5. **Namespacing decision**: installed plugin skills are `/plugin-name:skill-name` → currently `/mission-control:board`. Decide before release (rename plugin or skill if that's too long).
 6. **Self-migration test**: the author must uninstall the personal symlinked skill, install the built plugin, and confirm this repo's board still works.
 7. **Cold test + validate**: `claude plugin validate --strict .` and a first-run test in a repo that has never seen a board.
