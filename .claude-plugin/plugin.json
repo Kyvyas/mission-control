@@ -1,0 +1,10 @@
+{
+  "name": "mission-control",
+  "description": "Project boards with a memory for parked work — every hold keeps its clearance to resume. Per-repo or global boards, checklists, and a console-style web view.",
+  "author": {
+    "name": "Katya-yani Vyas",
+    "email": "katyayani.vyas@gmail.com"
+  },
+  "homepage": "https://github.com/kyvyas/mission-control",
+  "license": "MIT"
+}

@@ -1,0 +1,15 @@
+{
+  "name": "mission-control",
+  "description": "Mission Control — project boards for Claude Code",
+  "owner": {
+    "name": "Katya-yani Vyas",
+    "email": "katyayani.vyas@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "mission-control",
+      "source": "./",
+      "description": "Project boards with a memory for parked work — every hold keeps its clearance to resume."
+    }
+  ]
+}
