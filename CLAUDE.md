@@ -53,8 +53,8 @@ The release checklist lives on this repo's board (`.claude/board/`, "Publish Mis
 2. ~~**Schema versioning**~~ — done 2026-08-25: `"version": 1` in the starter; files without it are treated as v1 and stamped on next write.
 3. ~~**Re-render from template**~~ — done 2026-08-25: the refresh step rebuilds board.html from the template every time; per-board copies can no longer drift.
 4. ~~**Optional artifact**~~ — done 2026-08-25: `config.web` (default true) governs publishing; board.html is still generated locally either way.
-5. **Namespacing decision**: installed plugin skills are `/plugin-name:skill-name` → currently `/mission-control:board`. Decide before release (rename plugin or skill if that's too long).
-6. **Self-migration test**: the author must uninstall the personal symlinked skill, install the built plugin, and confirm this repo's board still works.
+5. ~~**Namespacing decision**~~ — decided 2026-08-25: keep `/mission-control:board`. Plugin skills are always namespaced (docs: no bare `/board` is possible); autocomplete and natural-language triggers make the length moot, and the plugin name carries the brand.
+6. **Self-migration test**: install the built plugin, then `rm ~/.claude/skills/board` (the symlink — otherwise two skills answer to "board", the personal one tracks the working tree while the plugin is a SHA snapshot, and a broken plugin hides behind the working personal skill). Confirm this repo's board and Babble's still work via `/mission-control:board`. Afterwards develop with `claude --plugin-dir .` instead of the symlink.
 7. **Cold test + validate**: `claude plugin validate --strict .` and a first-run test in a repo that has never seen a board.
 
 ## Development
