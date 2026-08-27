@@ -33,7 +33,16 @@ Or, once it's on GitHub:
 
 The skill is then `/mission-control:board` (plugin skills are always namespaced — type `/mi` and autocomplete), or just talk to it: "show the board", "park X — reason", "what next".
 
-Update after new commits: `claude plugin marketplace update mission-control`. Remove: `claude plugin uninstall mission-control@mission-control`.
+## Updating
+
+There's no auto-update: the version is the git commit you installed, and every push to `main` is a release. To pick up the latest:
+
+```
+claude plugin marketplace update mission-control
+claude plugin update mission-control@mission-control
+```
+
+then restart Claude Code (or `/reload-plugins`). `claude plugin list` shows which commit you have. To remove: `claude plugin uninstall mission-control@mission-control`.
 
 ## Local development
 
