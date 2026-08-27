@@ -4,7 +4,7 @@ Guidance for Claude Code working in this repo. Read before editing.
 
 ## Project
 
-**Mission Control** is a Claude Code plugin (in development) that gives users project boards with a memory for parked work. Its one opinion: a parked project MUST record *why it stopped* and *what resumes it*, so nothing dies silently in a backlog. Built and dogfooded by `kyvyas` starting 2026-08-25; not yet published.
+**Mission Control** is a Claude Code plugin (in development) that gives users project boards with a memory for parked work. Its one opinion: a parked project MUST record *why it stopped* and *what resumes it*, so nothing dies silently in a backlog. Built and dogfooded by `kyvyas` starting 2026-08-25; public on GitHub since 2026-08-27 (`kyvyas/mission-control`, branch `main`) and installable from there, though not yet announced.
 
 The plugin ships **logic only**. Board *data* lives in each user's repo at `<repo>/.claude/board/` (committed or gitignored, their choice). This repo's own board is at `.claude/board/` and is gitignored.
 
