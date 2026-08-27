@@ -55,7 +55,8 @@ The release checklist lives on this repo's board (`.claude/board/`, "Publish Mis
 4. ~~**Optional artifact**~~ — done 2026-08-25: `config.web` (default true) governs publishing; board.html is still generated locally either way.
 5. ~~**Namespacing decision**~~ — decided 2026-08-25: keep `/mission-control:board`. Plugin skills are always namespaced (docs: no bare `/board` is possible); autocomplete and natural-language triggers make the length moot, and the plugin name carries the brand.
 6. **Self-migration test**: install the built plugin, then `rm ~/.claude/skills/board` (the symlink — otherwise two skills answer to "board", the personal one tracks the working tree while the plugin is a SHA snapshot, and a broken plugin hides behind the working personal skill). Confirm this repo's board and Babble's still work via `/mission-control:board`. Afterwards develop with `claude --plugin-dir .` instead of the symlink.
-7. **Cold test + validate**: `claude plugin validate --strict .` and a first-run test in a repo that has never seen a board.
+7. **Cold test + validate**: `claude plugin validate .` (NOT `--strict` — it fails solely on the deliberately omitted `version` field, which the docs call optional; the community-marketplace review runs the plain form) and a first-run test in a repo that has never seen a board.
+8. **Community marketplace**: the official marketplace has no submission process; submit to `anthropics/claude-plugins-community` at platform.claude.com/plugins/submit once the plugin has had a few days of real use (listings pin a commit SHA).
 
 ## Development
 
