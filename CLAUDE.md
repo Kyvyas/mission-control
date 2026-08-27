@@ -59,7 +59,8 @@ The release checklist lives on this repo's board (`.claude/board/`, "Publish Mis
 
 ## Development
 
-- Run locally: `claude --plugin-dir .` then `/board` (or the namespaced form once installed). `/reload-plugins` picks up edits mid-session.
+- The author's install comes from the GitHub marketplace (`/plugin marketplace add kyvyas/mission-control`), the same path as everyone else's. The install is a snapshot at a commit — it does NOT track the working tree. After pushing: `claude plugin marketplace update mission-control && claude plugin update mission-control@mission-control`, then restart Claude Code.
+- Develop against the working tree: `claude --plugin-dir .` (overrides the installed copy for that session; `/reload-plugins` picks up edits mid-session). The skill is `/mission-control:board` either way.
 - Validate before release: `claude plugin validate --strict .`
 - `claude plugin eval` exists for eval suites but is early-access; not required for v1.
 - The author's live boards during dogfooding: this repo's at `.claude/board/` (gitignored) and Babble's at `~/Desktop/milestones/.claude/board/` (gitignored there too). Useful as real-world test data — but they are the author's real planning data, not fixtures; don't mutate them except through genuine `/board` operations.
