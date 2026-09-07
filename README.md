@@ -4,6 +4,14 @@ A project board for Claude Code with a memory for parked work: every project on 
 
 > Status: **work in progress** — being dogfooded before first release.
 
+![The Mission Control web board, dark console theme](docs/board-dark.png)
+
+<details><summary>Daylight ops (light theme)</summary>
+
+![The Mission Control web board, light theme](docs/board-light.png)
+
+</details>
+
 ## What it does
 
 - **One board per repo.** Run the board skill inside any repo and it creates `.claude/board/` there — commit it to share with your team, or gitignore it to keep planning private. Nothing is shared across repos.
