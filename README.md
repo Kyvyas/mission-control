@@ -15,23 +15,39 @@ A project board for Claude Code with a memory for parked work: every project on 
 
 ## Install
 
-Claude Code has no build step — this directory *is* the plugin. Add it as a marketplace, then install from it.
-
-From a local clone (no GitHub needed):
-
-```
-claude plugin marketplace add /path/to/mission-control
-claude plugin install mission-control@mission-control
-```
-
-Or, once it's on GitHub:
+Two commands and a restart:
 
 ```
 /plugin marketplace add kyvyas/mission-control
 /plugin install mission-control@mission-control
 ```
 
-The skill is then `/mission-control:board` (plugin skills are always namespaced — type `/mi` and autocomplete), or just talk to it: "show the board", "park X — reason", "what next".
+1. The first command registers this repo as a plugin marketplace — Claude Code fetches it from GitHub and reads its manifest. (Works as `claude plugin marketplace add …` from the shell too.)
+2. The second installs the plugin at the current commit. Choose **user scope** when asked (the default) so it's available in every project.
+3. Restart Claude Code.
+
+The skill is `/mission-control:board` — plugin skills are always namespaced, so type `/mi` and let autocomplete finish it. Mostly you won't type it at all: "show the board", "park X — reason", "what next" all work.
+
+### Your first board
+
+`cd` into any repo and run `/mission-control:board`. Since there's no board yet, it will:
+
+1. Explain what a board is, in a few sentences.
+2. Read your repo's docs (README, CLAUDE.md, roadmaps, plans, TODOs, `docs/`) and **propose** cards from anything plan-shaped — nothing is written until you approve. Boilerplate-only docs → an empty board and you add the first card.
+3. Create `.claude/board/` in your repo — commit it to share the board with your team, or add `.claude/board/` to `.gitignore` to keep planning private — and publish your web board, handing you its private, stable URL.
+
+Everything is yours and local: boards live in your repos, the web page is published privately to your Claude account. Nothing is shared with the author or anyone else.
+
+**Requirements**: Claude Code with git available. If your environment can't publish Claude Artifacts, the web board turns itself off and chat + `BOARD.md` work as normal.
+
+### Installing from a local clone
+
+No GitHub needed — the repo directory *is* the plugin:
+
+```
+claude plugin marketplace add /path/to/mission-control
+claude plugin install mission-control@mission-control
+```
 
 ## Updating
 
