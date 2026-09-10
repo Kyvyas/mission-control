@@ -107,8 +107,7 @@
   .wrap { max-width: 1240px; margin: 0 auto; padding: 30px 26px 60px; }
 
   header {
-    display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
-    padding-right: 150px;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
     border-bottom: 1px solid var(--line);
     padding-bottom: 16px;
     position: relative;
@@ -150,13 +149,13 @@
     letter-spacing: 0.05em; text-transform: uppercase;
   }
   .theme-toggle {
-    position: absolute; top: 0; right: 0;
+    align-self: center; margin-left: 4px;
     font-family: "Sora", -apple-system, "Segoe UI", sans-serif;
     font-size: 13px; font-weight: 600;
     color: var(--ink);
     background: var(--chipbg);
     border: 1.5px solid var(--accent-a); border-radius: 8px;
-    padding: 8px 16px; cursor: pointer;
+    padding: 7px 15px; cursor: pointer;
   }
   .theme-toggle:hover { background: var(--panel); border-color: var(--accent-b); }
   .theme-toggle:focus-visible { outline: 2px solid var(--accent-a); outline-offset: 2px; }
