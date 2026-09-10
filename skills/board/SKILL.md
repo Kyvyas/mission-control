@@ -53,7 +53,8 @@ Per project:
 
 Project references are fuzzy-matched (ask if ambiguous).
 
-- **`/board`** (no args) — show the board in chat: sections in order 🔵 Ideas / 🟢 Active / 🚀 Shipped / 🟡 Parked (Dropped only if non-empty); parked items show days parked + the unblock; checklists render as `- [x]`/`- [ ]` with a `(done/total)` count. If anything is parked > 21 days, lead with a one-line nag naming the longest hold and its way back.
+- **`/board`** (no args) — show the board in chat as a **board grid**: run `python3 <plugin root>/scripts/chatboard.py <board dir>/board.json` (plugin-root rule in First run step 3) and paste its output verbatim into a fenced code block — never hand-draw or re-align the grid. It shows columns Ideas / Active / Shipped / Parked (Dropped when non-empty), one compact card each (title, headline line, `▣ done/total` + `✎ notes` counts) and leads with the longest-hold nag when something is parked > 21 days. Below the block add one line: "Ask about any card for the full detail." If `python3` is unavailable or the script errors, fall back to markdown sections in column order with the same content.
+- **`/board <project>`** / "show me <project>" — the drill-in: full card as markdown — status, next action, checklist as `- [x]`/`- [ ]` with `(done/total)`, all notes, parked reason/unblock with days held.
 - **add** — new project. Infer or ask area + status; active/idea items need a `next_action`.
 - **park <project> — <reason>** — status `parked`, `parked_since` = today. **A parked project MUST have both `parked_reason` and `unblock`** — if no unblock was given, ask "what would resume this?" before parking.
 - **resume <project>** — status `active`, clear parked fields (keep a note like "parked 2026-08-17 → 2026-09-02: <reason>"), set a fresh `next_action` seeded from the old `unblock`.
