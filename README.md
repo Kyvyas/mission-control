@@ -26,9 +26,11 @@ A project board for Claude Code with a memory for parked work: every project on 
 Two commands and a restart:
 
 ```
-/plugin marketplace add kyvyas/mission-control
+/plugin marketplace add https://github.com/kyvyas/mission-control
 /plugin install mission-control@mission-control
 ```
+
+(The `kyvyas/mission-control` shorthand works too, but if your git config rewrites GitHub URLs to SSH and the machine has no SSH key, it fails with "Permission denied" — the explicit HTTPS URL always works for this public repo.)
 
 1. The first command registers this repo as a plugin marketplace — Claude Code fetches it from GitHub and reads its manifest. (Works as `claude plugin marketplace add …` from the shell too.)
 2. The second installs the plugin at the current commit. Choose **user scope** when asked (the default) so it's available in every project.
