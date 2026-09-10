@@ -50,9 +50,9 @@ Everything is yours and local: boards live in your repos, the web page is publis
 
 **Requirements**: Claude Code with git available. If your environment can't publish Claude Artifacts, the web board turns itself off and chat + `BOARD.md` work as normal.
 
-### Installing from a local clone
+### Installing without GitHub access
 
-No GitHub needed — the repo directory *is* the plugin:
+GitHub is only the download channel — the plugin runs entirely locally once installed. On a machine that can't reach GitHub (corporate network, offline), get this folder there any other way (zip download, USB, AirDrop), put it somewhere permanent, and the directory itself is the marketplace:
 
 ```
 claude plugin marketplace add /path/to/mission-control
