@@ -17,6 +17,7 @@ A project board for Claude Code with a memory for parked work: every project on 
 - **One board per repo.** Run the board skill inside any repo and it creates `.claude/board/` there — commit it to share with your team, or gitignore it to keep planning private. Nothing is shared across repos.
 - **First run does the setup for you.** It explains what a board is, reads your repo's docs (README, CLAUDE.md, roadmaps, plans, TODOs, `docs/`), and proposes cards from anything that looks like a plan — you approve before anything is written. No plan-like docs? You get an empty board and add the first card yourself.
 - **Talk to it in plain language**: add, park, resume, ship, drop, note, tick tasks, "what next", "what's stale".
+- **A real board in the terminal.** `/board` prints an aligned, colour-coded grid — columns, checklist progress bars, note counts — and `/board <project>` drills into one card's full detail.
 - **Parking is honest.** A parked project requires a reason *and* an unblock. Holds over three weeks get a one-line nag with the way back.
 - **Three synced views**: chat output, a `BOARD.md` markdown mirror (pin it as an editor preview tab), and a console-styled kanban web page published as a private Claude Artifact at a stable URL. The web page is optional (`config.web`) and also works straight from disk.
 - Optional per-project checklists beneath the single headline next action.

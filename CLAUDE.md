@@ -21,6 +21,12 @@ skills/board/
                      instructions, not code. THIS IS LIVE: ~/.claude/skills/board
                      is a symlink into this directory, so edits here change the
                      author's working /board immediately (next skill invocation).
+scripts/
+  chatboard.py       Deterministic renderer for the CHAT view: formats board.json as an
+                     aligned, colour-coded column grid (emoji status dots, progress bars,
+                     display-width padding — emoji are two cells). The skill runs it and
+                     pastes the output verbatim; never hand-draw the grid. Falls back to
+                     markdown sections when python3 is unavailable.
 templates/
   board.html         The web-board template (console design). Every board's
                      board.html is REGENERATED from this file on each refresh
@@ -39,6 +45,7 @@ templates/
 - **First run** in an unboarded repo: explain boards + the artifact in a few sentences, mention commit-vs-gitignore (don't ask), seed proposed cards from the repo's docs (README, CLAUDE.md, ROADMAP/PLAN/TODO, docs/) for approval, then bootstrap from `templates/`. Never copy another board's files.
 - **Statuses**: `idea | active | parked | shipped | dropped`, displayed in column order Ideas · Active · Shipped · Parked (Dropped only when non-empty). Parking requires `parked_reason` + `unblock`. Holds > 21 days trigger the "longest hold" nag.
 - **`next_action` vs `tasks`**: `next_action` is the single headline step; `tasks` is an optional checklist beneath it. Never auto-ship on checklist completion — announce and ask.
+- **Chat view is script-rendered**: `/board` output comes from `scripts/chatboard.py`, not model-drawn markdown — an LLM cannot align a four-column grid reliably. `/board <project>` is the drill-in for full card detail.
 - **Three synced displays** per board, refreshed after every data change; chat + BOARD.md are the core, the artifact is an enhancement gated by `config.web` (default true; auto-false when the Artifact tool is unavailable). board.html is always generated so the console view works from disk.
 
 ## Design system (templates/board.html)
