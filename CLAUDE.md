@@ -26,7 +26,9 @@ scripts/
                      aligned, colour-coded column grid (emoji status dots, progress bars,
                      display-width padding — emoji are two cells). The skill runs it and
                      pastes the output verbatim; never hand-draw the grid. Falls back to
-                     markdown sections when python3 is unavailable.
+                     markdown sections when python3 is unavailable. Cards are numbered
+                     #n in display order; `--list` prints that numbering so the skill
+                     resolves "#n" from the script, never by counting.
 templates/
   board.html         The web-board template (console design). Every board's
                      board.html is REGENERATED from this file on each refresh
