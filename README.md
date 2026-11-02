@@ -2,13 +2,13 @@
 
 A project board for Claude Code with a memory for parked work: every project on hold must record **why it stopped** and **what resumes it** — so nothing quietly dies in a backlog.
 
-> Status: **work in progress** — being dogfooded before first release.
+> Status: **v1** — in daily use by the author since August 2026. Every push to `main` is a release.
 
-![The Mission Control web board, dark console theme](docs/board-dark.png)
+![The Mission Control web board, dark theme (dusk orbit)](docs/board-dark.png)
 
-<details><summary>Daylight ops (light theme)</summary>
+<details><summary>Light theme (dawn orbit)</summary>
 
-![The Mission Control web board, light theme](docs/board-light.png)
+![The Mission Control web board, light theme (dawn orbit)](docs/board-light.png)
 
 </details>
 
@@ -17,9 +17,9 @@ A project board for Claude Code with a memory for parked work: every project on 
 - **One board per repo.** Run the board skill inside any repo and it creates `.claude/board/` there — commit it to share with your team, or gitignore it to keep planning private. Nothing is shared across repos.
 - **First run does the setup for you.** It explains what a board is, reads your repo's docs (README, CLAUDE.md, roadmaps, plans, TODOs, `docs/`), and proposes cards from anything that looks like a plan — you approve before anything is written. No plan-like docs? You get an empty board and add the first card yourself.
 - **Talk to it in plain language**: add, park, resume, ship, drop, note, tick tasks, "what next", "what's stale".
-- **A real board in the terminal.** `/board` prints an aligned, colour-coded grid — columns, checklist progress bars, note counts — and `/board <project>` drills into one card's full detail.
+- **A real board in the terminal.** `/board` prints an aligned, colour-coded grid — numbered cards in columns, checklist progress bars, note counts — and asking about a card by name or number ("show #2", "tick #3 validate") drills into its full detail.
 - **Parking is honest.** A parked project requires a reason *and* an unblock. Holds over three weeks get a one-line nag with the way back.
-- **Three synced views**: chat output, a `BOARD.md` markdown mirror (pin it as an editor preview tab), and a console-styled kanban web page published as a private Claude Artifact at a stable URL. The web page is optional (`config.web`) and also works straight from disk.
+- **Three synced views**: chat output, a `BOARD.md` markdown mirror (pin it as an editor preview tab), and a kanban web page with light and dark themes, published as a private Claude Artifact at a stable URL. The web page is optional (`config.web`) and also works straight from disk.
 - Optional per-project checklists beneath the single headline next action.
 
 ## Install
@@ -27,11 +27,11 @@ A project board for Claude Code with a memory for parked work: every project on 
 Two commands and a restart:
 
 ```
-/plugin marketplace add https://github.com/kyvyas/mission-control
+/plugin marketplace add https://github.com/Kyvyas/mission-control
 /plugin install mission-control@mission-control
 ```
 
-(The `kyvyas/mission-control` shorthand works too, but if your git config rewrites GitHub URLs to SSH and the machine has no SSH key, it fails with "Permission denied" — the explicit HTTPS URL always works for this public repo.)
+(The `Kyvyas/mission-control` shorthand works too, but if your git config rewrites GitHub URLs to SSH and the machine has no SSH key, it fails with "Permission denied" — the explicit HTTPS URL always works for this public repo.)
 
 1. The first command registers this repo as a plugin marketplace — Claude Code fetches it from GitHub and reads its manifest. (Works as `claude plugin marketplace add …` from the shell too.)
 2. The second installs the plugin at the current commit. Choose **user scope** when asked (the default) so it's available in every project.
@@ -82,6 +82,7 @@ Then `/reload-plugins` after edits, and `claude plugin validate .` before releas
 ## Layout
 
 - `skills/board/SKILL.md` — the skill; the whole product logic lives here as instructions.
+- `scripts/chatboard.py` — renders the board as the terminal grid shown by `/board`.
 - `templates/board.html` — the web-board template. Every board's `board.html` is regenerated from it on each change, so design updates reach existing boards automatically.
 - `templates/board.json` — the starter data file (schema version 1).
 - `.claude-plugin/` — plugin manifest and the single-plugin marketplace.

@@ -9,7 +9,7 @@
     {
       "name": "mission-control",
       "source": "./",
-      "description": "Project boards with a memory for parked work — every hold keeps its clearance to resume."
+      "description": "Project boards that remember why you stopped. Every parked project records why it stalled and what resumes it, so nothing dies quietly in a backlog. One board per repo, with checklists, a terminal grid and a shareable web board."
     }
   ]
 }
